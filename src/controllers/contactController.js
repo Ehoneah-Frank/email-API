@@ -28,10 +28,16 @@ export const sendContactInfo = async (req, res) => {
 
         // Set up email data
         let mailOptions = {
-            from: email,
+            from: process.env.EMAIL_USER, // Changed from user's email to your email
             to: process.env.EMAIL_USER,
-            subject: `Contact form submission from ${name}`,
-            text: message,
+            subject: `New message from ${name}`,
+            html: `
+                <h3>New Contact Form Submission</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Message:</strong></p>
+                <p>${message}</p>
+            `
         };
 
         // Send mail with defined transport object

@@ -51,6 +51,11 @@ export const sendContactInfo = async (req, res) => {
       if (error.isJoi){
         return res.status(400).json({ error: error.details.map((detail) => detail.message) });
       }
-        res.status(400).json({ error: error.message });
+      if (error.code === 11000) { 
+        return res.status(400).json({ 
+          error: "This email has already submitted a message" 
+        });
+      }
+        res.status(500).json({ error: "Server error. Please try again later." });
     }
 };

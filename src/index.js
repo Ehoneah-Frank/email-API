@@ -18,7 +18,7 @@ const app = express();
 
 expressOasGenerator.handleResponses(app, {
    alwaysServeDocs: true,
-   tags: [ 'Contact Information', 'Partnership Information' ],
+   tags: [ 'Contact', 'Partnership' ],
    mongooseModels: mongoose.modelNames(), 
 });
 
@@ -32,7 +32,6 @@ app.use(cors({credentials: true, origin: '*'}));
 // Routes
 app.use("/api/contact", contactRoute);
 app.use("/api/partnership", partnershipRouter);
-
 expressOasGenerator.handleRequests();
 app.use((req, res) => res.redirect('/api-docs'));
 

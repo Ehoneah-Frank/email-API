@@ -7,8 +7,7 @@ import contactRoute from "./routes/contactRoute.js";
 import expressOasGenerator from "express-oas-generator";
 import mongoose from "mongoose";
 
-// import swaggerUi from "swagger-ui-express";
-// import swaggerDocument from "./swagger.json" assert { type: "json" };
+
 
 dotenv.config();
 // Database connection

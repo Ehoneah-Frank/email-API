@@ -6,57 +6,22 @@ dotenv.config();
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Updated Joi schema to include partnership fields
 const contactSchemaJoi = joi.object({
     name: joi.string().required().trim(),
     email: joi.string().email().required().lowercase().trim(),
     message: joi.string().required().trim(),
-    organization: joi.string().trim().optional().allow(''),
-    partnershipType: joi.string().trim().optional().allow('')
 });
 
 export const sendContactInfo = async (req, res) => {
-    const { name, email, message, organization, partnershipType } = req.body;
+    const { name, email, message } = req.body;
 
-    console.log("Received contact form submission:", { 
-        name, 
-        email, 
-        message,
-        organization,
-        partnershipType 
-    });
+    console.log("Received contact form submission:", { name, email, message });
 
     try {
-        // Validate the request body
+        // Validate the request body against the schema using Joi
         console.log("Validating form data...");
-        await contactSchemaJoi.validateAsync({ 
-            name, 
-            email, 
-            message,
-            organization,
-            partnershipType 
-        });
+        await contactSchemaJoi.validateAsync({ name, email, message });
         console.log("Form data validation successful.");
-
-        // Build email HTML content
-        let emailHtml = `
-            <h3>New Contact Form Submission</h3>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-        `;
-
-        if (organization) {
-            emailHtml += `<p><strong>Organization:</strong> ${organization}</p>`;
-        }
-
-        if (partnershipType) {
-            emailHtml += `<p><strong>Partnership Type:</strong> ${partnershipType}</p>`;
-        }
-
-        emailHtml += `
-            <p><strong>Message:</strong></p>
-            <p>${message}</p>
-        `;
 
         // Send email using Resend
         console.log("Attempting to send email via Resend...");
@@ -64,7 +29,13 @@ export const sendContactInfo = async (req, res) => {
             from: 'ngoane-website@rxkonet.com',
             to: process.env.EMAIL_USER,
             subject: `New message from ${name}`,
-            html: emailHtml
+            html: `
+                <h3>New Contact Form Submission</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Message:</strong></p>
+                <p>${message}</p>
+            `
         });
 
         if (error) {
@@ -76,13 +47,7 @@ export const sendContactInfo = async (req, res) => {
 
         // Save contact information to the database
         console.log("Saving contact information to the database...");
-        const newContact = new contact({ 
-            name, 
-            email, 
-            message,
-            organization: organization || undefined,
-            partnershipType: partnershipType || undefined
-        });
+        const newContact = new contact({ name, email, message });
         await newContact.save();
         console.log("Contact information saved to the database.");
 

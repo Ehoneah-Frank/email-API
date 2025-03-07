@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import contactRoute from "./routes/contactRoute.js";
+import partnershipRouter from "./routes/partnershipRoute.js";
 import expressOasGenerator from "express-oas-generator";
 import mongoose from "mongoose";
 
@@ -17,7 +18,7 @@ const app = express();
 
 expressOasGenerator.handleResponses(app, {
    alwaysServeDocs: true,
-   tags: [ 'Contact Information' ],
+   tags: [ 'Contact Information', 'Partnership Information' ],
    mongooseModels: mongoose.modelNames(), 
 });
 
@@ -30,6 +31,8 @@ app.use(cors({credentials: true, origin: '*'}));
 
 // Routes
 app.use("/api/contact", contactRoute);
+app.use("/api/partnership", partnershipRouter);
+
 expressOasGenerator.handleRequests();
 app.use((req, res) => res.redirect('/api-docs'));
 

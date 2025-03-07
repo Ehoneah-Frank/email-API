@@ -1,7 +1,8 @@
 import express from 'express';
-const router = express.Router();
+
 import { sendContactInfo } from '../controllers/contactController.js';
 
+const router = express.Router();
 
 router.post('/', sendContactInfo);
 

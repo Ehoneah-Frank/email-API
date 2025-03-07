@@ -12,14 +12,7 @@ const contactSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
-    organization: {
-        type: String,
-        trim: true
-    },
-    partnershipType: {
-        type: String,
-        trim: true
-    },
+   
     message: {
         type: String,
         required: true,
